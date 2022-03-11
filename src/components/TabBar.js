@@ -20,7 +20,7 @@ export function TabBar({
           isActive={activeTab === 'html'}
           onClick={() => onChange('html')}
         >
-          HTML
+          MDX
         </TabButton>
         <TabButton
           isActive={activeTab === 'css'}
@@ -75,7 +75,8 @@ function TabButton({ isActive, onClick, children }) {
         'relative flex py-3 text-sm leading-6 font-semibold focus:outline-none',
         {
           'text-sky-500': isActive,
-          'text-gray-700 hover:text-gray-900 focus:text-gray-900 dark:text-gray-300 dark:hover:text-white': !isActive,
+          'text-gray-700 hover:text-gray-900 focus:text-gray-900 dark:text-gray-300 dark:hover:text-white':
+            !isActive,
         }
       )}
       onClick={onClick}

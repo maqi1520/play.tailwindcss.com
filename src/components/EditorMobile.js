@@ -4,18 +4,19 @@ import CodeMirror from 'codemirror'
 import { tailwindcssMode } from '../codemirror/tailwindcssMode'
 import { onDidChangeTheme, getTheme } from '../utils/theme'
 require('codemirror/mode/htmlmixed/htmlmixed')
+require('codemirror/mode/markdown/markdown')
 require('codemirror/mode/javascript/javascript')
 
 CodeMirror.defineMode('tailwindcss', tailwindcssMode)
 
 const docToMode = {
-  html: 'htmlmixed',
+  html: 'markdown',
   css: 'tailwindcss',
   config: 'javascript',
 }
 
 const modeToDoc = {
-  htmlmixed: 'html',
+  markdown: 'html',
   tailwindcss: 'css',
   javascript: 'config',
 }
@@ -68,6 +69,7 @@ export default function EditorMobile({
       if (skipNextOnChange.current) {
         skipNextOnChange.current = false
       } else {
+        console.log('---', content.current)
         onChange(activeTab, content.current)
       }
     }
@@ -78,9 +80,8 @@ export default function EditorMobile({
   }, [activeTab, onChange])
 
   useEffect(() => {
-    history.current[
-      modeToDoc[cmRef.current.getOption('mode')]
-    ] = cmRef.current.getHistory()
+    history.current[modeToDoc[cmRef.current.getOption('mode')]] =
+      cmRef.current.getHistory()
 
     skipNextOnChange.current = true
     cmRef.current.setValue(content.current[activeTab])
