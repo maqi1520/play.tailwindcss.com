@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import * as runtime from 'react/jsx-runtime'
-
-import { VFile } from 'vfile'
-import { VFileMessage } from 'vfile-message'
 import { evaluate } from '@mdx-js/mdx'
+import { MDXProvider, useMDXComponents } from '@mdx-js/react'
 import remarkGfm from 'remark-gfm'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMath from 'remark-math'
@@ -135,62 +133,61 @@ export default function Pen({
 
     localStorage.setItem('content', JSON.stringify(content))
 
-    const file = new VFile({ basename: 'example.mdx', value: content.html })
+    // const file = new VFile({ basename: 'example.mdx', value: content.html })
 
-    const capture = (name) => () => (tree) => {
-      file.data[name] = tree
-    }
+    // const capture = (name) => () => (tree) => {
+    //   console.log(tree)
+
+    //   visit(tree, 'code', (node, index, parent) => {
+    //     node.lang = language
+    //     console.log(node)
+    //   })
+
+    // }
     const remarkPlugins = []
 
     remarkPlugins.push(remarkGfm)
     remarkPlugins.push(remarkFrontmatter)
     remarkPlugins.push(remarkMath)
 
-    remarkPlugins.push(capture('mdast'))
+    //remarkPlugins.push(capture('mdast'))
 
     try {
-      file.result = (
-        await evaluate(file, {
-          ...runtime,
-          useMDXComponents: () => ({
-            ...MDXComponents,
-          }),
-          useDynamicImport: true,
-          remarkPlugins,
-          rehypePlugins: [capture('hast')],
-          recmaPlugins: [capture('esast')],
-        })
-      ).default
-    } catch (error) {
-      const message =
-        error instanceof VFileMessage ? error : new VFileMessage(error)
+      const { default: Content } = await evaluate(content.html, {
+        ...runtime,
+        format: 'mdx',
+        useDynamicImport: true,
+        remarkPlugins,
+        //rehypePlugins: [capture('hast')],
+        //recmaPlugins: [capture('esast')],
+        useMDXComponents,
+      })
+      content.html = ReactDOMServer.renderToString(
+        <MDXProvider components={MDXComponents}>
+          <Content />
+        </MDXProvider>
+      )
 
-      if (!file.messages.includes(message)) {
-        file.messages.push(message)
+      const { css, html, jit, canceled, error } = await requestResponse(
+        worker.current,
+        content
+      )
+      if (canceled) {
+        return
       }
-
-      message.fatal = true
-    }
-
-    content.html = ReactDOMServer.renderToString(file.result())
-
-    const { css, html, jit, canceled, error } = await requestResponse(
-      worker.current,
-      content
-    )
-    if (canceled) {
-      return
-    }
-    setIsLoadingImmediate(false)
-    if (error) {
-      setError(error)
-      return
-    }
-    setErrorImmediate()
-    setJit(Boolean(jit))
-    if (css || html) {
-      copyRef.current.set({ css, html })
-      inject({ css, html })
+      setIsLoadingImmediate(false)
+      if (error) {
+        setError(error)
+        return
+      }
+      setErrorImmediate()
+      setJit(Boolean(jit))
+      if (css || html) {
+        copyRef.current.set({ css, html })
+        inject({ css, html })
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 

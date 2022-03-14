@@ -20,8 +20,8 @@ export function Logo({ className }) {
         ></path>
       </svg>
 
-      <span className="text-3xl ml-2">Wechat</span>
-      <span className="text-3xl ml-2">wind</span>
+      <span className="text-2xl ml-1">wechat</span>
+      <span className="text-2xl ml-1">wind</span>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import React from 'react'
 
 import { H1, H2, H3, H4 } from './Heading'
 import InlineCode from './InlineCode'
+import CodeBlock from './CodeBlock'
 
 const P = (p) => <p className="whitespace-pre-wrap my-4" {...p} />
 
@@ -29,4 +30,7 @@ const Blockquote = ({ children, ...props }) => {
   )
 }
 
-export const MDXComponents = {}
+export const MDXComponents = {
+  wrapper: (props) => <div id="nice" {...props} />,
+  pre: CodeBlock,
+}

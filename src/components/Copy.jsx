@@ -3,7 +3,9 @@ import clsx from 'clsx'
 import juice from 'juice/client'
 
 function inlineCSS(html, css) {
-  return juice.inlineContent(html, css)
+  return juice.inlineContent(html, css, {
+    inlinePseudoElements: true,
+  })
 }
 
 export const copySafari = (text) => {
