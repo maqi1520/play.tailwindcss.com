@@ -31,6 +31,20 @@ const Blockquote = ({ children, ...props }) => {
 }
 
 export const MDXComponents = {
-  wrapper: (props) => <div id="nice" {...props} />,
+  wrapper: (props) => <section id="nice" {...props} />,
+  h1: H1,
+  h2: H2,
+  h3: H3,
+  h4: H4,
+  a: (props) => {
+    return (
+      <span className="link">
+        <a {...props} />
+      </span>
+    )
+  },
   pre: CodeBlock,
+  blockquote: (props) => {
+    return <blockquote {...props} />
+  },
 }

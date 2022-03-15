@@ -257,7 +257,8 @@ export const Preview = forwardRef(
           )}
           <div
             className={clsx('relative', {
-              'border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden': responsiveDesignMode,
+              'border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden':
+                responsiveDesignMode,
             })}
             style={
               responsiveDesignMode
@@ -309,6 +310,48 @@ export const Preview = forwardRef(
                   <head>
                     <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <style>
+                    body {
+                      margin: 0;
+                      font-family: -apple-system-font, BlinkMacSystemFont, 'Helvetica Neue',
+                        'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei',
+                        Arial, sans-serif;
+                      padding: 20px;
+                      text-align: justify;
+                      font-size: 17px;
+                      color: #333;
+                    }
+                    body * {
+                      max-width: 100% !important;
+                      box-sizing: border-box;
+                      box-sizing: border-box !important;
+                      word-wrap: break-word !important;
+                    }
+                    table {
+                      margin-bottom: 10px;
+                      border-collapse: collapse;
+                      display: table;
+                    }
+                    td,
+                    th {
+                      padding: 5px 10px;
+                      border: 1px solid #ddd;
+                    }
+                    caption {
+                      border: 1px dashed #ddd;
+                      border-bottom: 0;
+                      padding: 3px;
+                      text-align: center;
+                    }
+                    th {
+                      border-top: 2px solid #bbb;
+                      background: #f7f7f7;
+                    }
+                    td p {
+                      margin: 0;
+                      padding: 0;
+                    }
+                    </style>
                     <style id="_style"></style>
                     <script>
                     var hasHtml = false

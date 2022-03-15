@@ -172,6 +172,14 @@ export default function Pen({
         worker.current,
         content
       )
+      // const css1 = css
+      //   .replace(/ \/ var\(--tw-text-opacity\)/g, '')
+      //   .replace(/ \/ var\(--tw-bg-opacity\)/g, '')
+      //   .replace(/ \/ var\(--tw-border-opacity\)/g, '')
+      //   .replace(/\d+.\d+rem|\d+rem/g, (a, b) => {
+      //     return parseFloat(a) * 16 + 'px'
+      //   })
+      // console.log(css1)
       if (canceled) {
         return
       }
