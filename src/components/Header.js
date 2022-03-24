@@ -1,24 +1,12 @@
 import { Logo } from './Logo'
 import clsx from 'clsx'
 import { toggleTheme } from '../utils/theme'
-import tailwind1 from 'tailwindcss-v1/package.json?fields=version'
-import tailwind2 from 'tailwindcss-v2/package.json?fields=version'
-import tailwind3 from 'tailwindcss/package.json?fields=version'
-import { Listbox } from '@headlessui/react'
-
-const versions = {
-  1: tailwind1.version,
-  2: tailwind2.version,
-  3: tailwind3.version,
-}
 
 export function Header({
   layout,
   onChangeLayout,
   responsiveDesignMode,
   onToggleResponsiveDesignMode,
-  tailwindVersion,
-  onChangeTailwindVersion,
   children,
 }) {
   return (
@@ -31,10 +19,6 @@ export function Header({
         {children}
       </div>
       <div className="flex items-center">
-        <VersionSwitcher
-          value={tailwindVersion}
-          onChange={onChangeTailwindVersion}
-        />
         <div className="hidden lg:flex items-center ml-6 rounded-md ring-1 ring-gray-900/5 shadow-sm dark:ring-0 dark:bg-gray-800 dark:shadow-highlight/4">
           <HeaderButton
             isActive={layout === 'vertical'}
@@ -161,67 +145,5 @@ function HeaderButton({
         {children}
       </svg>
     </button>
-  )
-}
-
-function VersionSwitcher({ value, onChange }) {
-  return (
-    <Listbox value={value} onChange={onChange} as="div" className="relative">
-      <Listbox.Button className="text-gray-500 text-xs leading-5 font-semibold bg-gray-400/10 rounded-full py-1 px-3 flex items-center hover:bg-gray-400/20 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:shadow-highlight/4">
-        v{versions[value]}
-        <svg
-          width="6"
-          height="3"
-          className="ml-2 overflow-visible"
-          aria-hidden="true"
-        >
-          <path
-            d="M0 0L3 3L6 0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </Listbox.Button>
-      <div className="absolute top-full right-0 mt-2 rounded-lg shadow-lg">
-        <Listbox.Options className="overflow-hidden py-1 w-44 rounded-lg bg-white ring-1 ring-gray-900/10 text-sm leading-6 font-semibold text-gray-700 space-y-1 dark:bg-gray-800 dark:ring-0 dark:text-gray-300 dark:shadow-highlight/4">
-          {Object.entries(versions)
-            .sort((a, z) => parseInt(z, 10) - parseInt(a, 10))
-            .map(([version, fullVersion]) => (
-              <Listbox.Option
-                key={version}
-                value={version}
-                className={({ selected, active }) =>
-                  clsx(
-                    'flex items-center justify-between px-3 py-1 cursor-pointer',
-                    active && !selected && 'text-gray-900 dark:text-white',
-                    active && 'bg-gray-50 dark:bg-gray-600/30',
-                    selected && 'text-sky-500 dark:text-sky-400'
-                  )
-                }
-              >
-                {({ selected }) => (
-                  <>
-                    v{fullVersion}
-                    {selected && (
-                      <svg width="24" height="24" fill="none">
-                        <path
-                          d="m6 13 4 4 8-10"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </>
-                )}
-              </Listbox.Option>
-            ))}
-        </Listbox.Options>
-      </div>
-    </Listbox>
   )
 }

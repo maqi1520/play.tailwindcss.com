@@ -2,7 +2,7 @@ import * as monaco from 'monaco-editor'
 import { CommandsRegistry } from 'monaco-editor/esm/vs/platform/commands/common/commands'
 import PrettierWorker from 'worker-loader!../workers/prettier.worker.js'
 import { createWorkerQueue } from '../utils/workers'
-import { setupHtmlMode } from './html'
+import { setupMarkdownMode } from './markdown'
 import { setupCssMode } from './css'
 import { setupJavaScriptMode } from './javascript'
 import { getTheme } from '../utils/theme'
@@ -56,7 +56,7 @@ export function createMonacoEditor({
 
   disposables.push(registerDocumentFormattingEditProviders())
 
-  const html = setupHtmlMode(
+  const html = setupMarkdownMode(
     initialContent.html,
     (newContent) => {
       triggerOnChange('html', newContent)
@@ -196,6 +196,9 @@ export function createMonacoEditor({
     minimap: { enabled: false },
     theme: getTheme() === 'dark' ? 'tw-dark' : 'tw-light',
     fixedOverflowWidgets: true,
+    unicodeHighlight: {
+      ambiguousCharacters: false,
+    },
   })
   disposables.push(editor)
 

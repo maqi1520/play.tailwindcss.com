@@ -7,7 +7,6 @@ function CodeBlock(props) {
   // e.g. "language-js"
 
   const language = className.substring(9)
-  console.log(children)
   return (
     <section className="code__card">
       <section className="code__tools">
@@ -15,7 +14,7 @@ function CodeBlock(props) {
         <span className="yellow code__circle"></span>
         <span className="green code__circle"></span>
       </section>
-      <section className="card__content">
+      <section className="code__card__content">
         <Highlight
           {...defaultProps}
           theme={theme}
@@ -37,12 +36,12 @@ function CodeBlock(props) {
                 {tokens.map(
                   (line, i) =>
                     i < tokens.length - 1 && (
-                      <>
+                      <span key={i}>
                         {line.map((token, key) => (
                           <span {...getTokenProps({ token, key })} />
                         ))}
                         <br />
-                      </>
+                      </span>
                     )
                 )}
               </code>

@@ -45,7 +45,7 @@
     "juice": "8.0.0",
     "klona": "^2.0.4",
     "line-column": "^1.0.2",
-    "monaco-editor": "0.32.1",
+    "monaco-editor": "0.33.0",
     "next": "^12.0.3",
     "p-queue": "^6.6.1",
     "postcss": "^8.3.9",
@@ -68,9 +68,11 @@
     "tailwindcss-language-service": "0.0.23",
     "tailwindcss-v1": "npm:tailwindcss@1.9.6",
     "tailwindcss-v2": "npm:tailwindcss@2.2.19",
-    "vfile": "^5.3.1",
-    "vfile-message": "^3.1.1",
     "vscode-languageserver-textdocument": "^1.0.1",
+    "vfile": "5.3.0",
+    "vfile-message": "3.1.0",
+    "vfile-reporter": "7.0.3",
+    "vfile-statistics": "2.0.0",
     "worker-loader": "^3.0.8"
   }
 }

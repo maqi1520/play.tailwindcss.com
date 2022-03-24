@@ -8,7 +8,6 @@ import remarkMath from 'remark-math'
 import ReactDOMServer from 'react-dom/server'
 import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import Worker from 'worker-loader!../workers/postcss.worker.js'
-import { requestResponse } from '../utils/workers'
 import { debounce } from 'debounce'
 import { Editor } from './Editor'
 import SplitPane from 'react-split-pane'
@@ -23,8 +22,11 @@ import { Header } from './Header'
 import { Share } from './Share'
 import { CopyBtn } from './Copy'
 import { TabBar } from './TabBar'
-import { toValidTailwindVersion } from '../utils/toValidTailwindVersion'
 import { MDXComponents } from './MDX/MDXComponents'
+
+import { VFile } from 'vfile'
+import { VFileMessage } from 'vfile-message'
+import { statistics } from 'vfile-statistics'
 
 const HEADER_HEIGHT = 60 - 1
 const TAB_BAR_HEIGHT = 40
@@ -64,10 +66,8 @@ export default function Pen({
   const [responsiveSize, setResponsiveSize] = useState(
     initialResponsiveSize || DEFAULT_RESPONSIVE_SIZE
   )
-  const [tailwindVersion, setTailwindVersion] = useState(
-    toValidTailwindVersion(initialContent.version)
-  )
-  const [jit, setJit] = useState(false)
+
+  const [state, setState] = useState({ file: null })
 
   useEffect(() => {
     setDirty(true)
@@ -77,7 +77,6 @@ export default function Pen({
     responsiveSize.width,
     responsiveSize.height,
     responsiveDesignMode,
-    tailwindVersion,
   ])
 
   useEffect(() => {
@@ -95,7 +94,6 @@ export default function Pen({
 
   useEffect(() => {
     setDirty(false)
-    setTailwindVersion(toValidTailwindVersion(initialContent.version))
     if (
       shouldClearOnUpdate &&
       previewRef.current &&
@@ -112,7 +110,6 @@ export default function Pen({
         html: initialContent.html,
         css: initialContent.css,
         config: initialContent.config,
-        tailwindVersion: toValidTailwindVersion(initialContent.version),
       })
     }
   }, [initialContent.ID])
@@ -133,17 +130,13 @@ export default function Pen({
 
     localStorage.setItem('content', JSON.stringify(content))
 
-    // const file = new VFile({ basename: 'example.mdx', value: content.html })
+    const file = new VFile({ basename: 'index.mdx', value: content.html })
+    let stats, errorMessage
 
     // const capture = (name) => () => (tree) => {
-    //   console.log(tree)
+    //   file.data[name] = tree;
+    // };
 
-    //   visit(tree, 'code', (node, index, parent) => {
-    //     node.lang = language
-    //     console.log(node)
-    //   })
-
-    // }
     const remarkPlugins = []
 
     remarkPlugins.push(remarkGfm)
@@ -168,35 +161,31 @@ export default function Pen({
         </MDXProvider>
       )
 
-      const { css, html, jit, canceled, error } = await requestResponse(
-        worker.current,
-        content
-      )
-      // const css1 = css
-      //   .replace(/ \/ var\(--tw-text-opacity\)/g, '')
-      //   .replace(/ \/ var\(--tw-bg-opacity\)/g, '')
-      //   .replace(/ \/ var\(--tw-border-opacity\)/g, '')
-      //   .replace(/\d+.\d+rem|\d+rem/g, (a, b) => {
-      //     return parseFloat(a) * 16 + 'px'
-      //   })
-      // console.log(css1)
-      if (canceled) {
-        return
-      }
-      setIsLoadingImmediate(false)
-      if (error) {
-        setError(error)
-        return
-      }
-      setErrorImmediate()
-      setJit(Boolean(jit))
+      const { css, html } = content
+
       if (css || html) {
         copyRef.current.set({ css, html })
         inject({ css, html })
       }
     } catch (error) {
-      console.log(error)
+      const message =
+        error instanceof VFileMessage ? error : new VFileMessage(error)
+      message.fatal = true
+      if (!file.messages.includes(message)) {
+        file.message(message)
+      }
+
+      stats = state.file ? statistics(state.file) : {}
+
+      console.log(file.messages[0].message)
+      errorMessage = file.messages[0].message
     }
+    setState({
+      stats,
+      file,
+      errorMessage,
+    })
+    setIsLoadingImmediate(false)
   }
 
   const compile = useCallback(debounce(compileNow, 200), [])
@@ -204,19 +193,13 @@ export default function Pen({
   const onChange = useCallback(
     (document, content) => {
       setDirty(true)
-      if (document === 'html' && !jit) {
-        inject({ html: content.html })
-      } else {
-        compile({
-          html: content.html,
-          css: content.css,
-          config: content.config,
-          skipIntelliSense: document === 'html',
-          tailwindVersion,
-        })
-      }
+      compile({
+        html: content.html,
+        css: content.css,
+        config: content.config,
+      })
     },
-    [inject, compile, jit, tailwindVersion]
+    [compile]
   )
 
   useEffect(() => {
@@ -337,6 +320,17 @@ export default function Pen({
     setActiveTab(initialActiveTab)
   }, [initialActiveTab])
 
+  const errorMessage = state.errorMessage && (
+    <span className="group relative ml-auto">
+      <span className="w-6 h-6 flex justify-center items-center bg-red-600 text-white rounded-full">
+        {state.stats.fatal || state.stats.warn || 0}
+      </span>
+      <div className="hidden group-hover:block absolute top-full right-0 bg-white shadow-sm border-gray-200 border p-4 rounded text-red-500">
+        <pre>{state.errorMessage}</pre>
+      </div>
+    </span>
+  )
+
   return (
     <>
       <Header
@@ -346,11 +340,6 @@ export default function Pen({
         onToggleResponsiveDesignMode={() =>
           setResponsiveDesignMode(!responsiveDesignMode)
         }
-        tailwindVersion={tailwindVersion}
-        onChangeTailwindVersion={(version) => {
-          setTailwindVersion(version)
-          compileNow({ _recompile: true, tailwindVersion: version })
-        }}
       >
         <Share
           editorRef={editorRef}
@@ -361,7 +350,6 @@ export default function Pen({
           layout={size.layout}
           responsiveSize={responsiveDesignMode ? responsiveSize : undefined}
           activeTab={activeTab}
-          tailwindVersion={tailwindVersion}
         />
         <CopyBtn ref={copyRef} />
       </Header>
@@ -370,6 +358,7 @@ export default function Pen({
           <>
             {(!isLg || size.layout !== 'preview') && (
               <TabBar
+                errorMessage={errorMessage}
                 width={
                   size.layout === 'vertical' && isLg ? size.current : '100%'
                 }
@@ -413,7 +402,6 @@ export default function Pen({
                     onChange={onChange}
                     worker={worker}
                     activeTab={activeTab}
-                    tailwindVersion={tailwindVersion}
                   />
                 )}
               </div>
@@ -435,7 +423,6 @@ export default function Pen({
                       css: initialContent.css,
                       config: initialContent.config,
                       html: initialContent.html,
-                      tailwindVersion: initialContent.version,
                     })
                   }}
                 />

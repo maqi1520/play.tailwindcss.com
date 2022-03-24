@@ -1,6 +1,8 @@
 import clsx from 'clsx'
 
 export function TabBar({
+  errorMessage,
+
   activeTab,
   width,
   isLoading,
@@ -63,6 +65,7 @@ export function TabBar({
           </svg>
         </p>
       )}
+      {errorMessage}
     </div>
   )
 }

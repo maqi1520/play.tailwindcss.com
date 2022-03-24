@@ -9,7 +9,6 @@ export default function Editor({
   worker,
   activeTab,
   editorRef: inRef,
-  tailwindVersion,
 }) {
   const editorContainerRef = useRef()
   const editorRef = useRef()
@@ -21,7 +20,6 @@ export default function Editor({
       initialContent,
       onChange,
       worker,
-      tailwindVersion,
     })
 
     editorRef.current = editor
@@ -44,10 +42,6 @@ export default function Editor({
     }
     editorRef.current.reset(initialContent)
   }, [initialContent])
-
-  useEffect(() => {
-    editorRef.current.setTailwindVersion(tailwindVersion)
-  }, [tailwindVersion])
 
   useEffect(() => {
     function handleThemeChange(theme) {

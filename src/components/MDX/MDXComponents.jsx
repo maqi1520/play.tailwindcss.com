@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-has-content */
 
 import React from 'react'
@@ -44,7 +45,12 @@ export const MDXComponents = {
     )
   },
   pre: CodeBlock,
-  blockquote: (props) => {
-    return <blockquote {...props} />
+  img: (props) => {
+    return (
+      <figure>
+        <img {...props} />
+        <figcaption>{props.alt}</figcaption>
+      </figure>
+    )
   },
 }
