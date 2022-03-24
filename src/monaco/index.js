@@ -2,9 +2,13 @@ import * as monaco from 'monaco-editor'
 import { CommandsRegistry } from 'monaco-editor/esm/vs/platform/commands/common/commands'
 import PrettierWorker from 'worker-loader!../workers/prettier.worker.js'
 import { createWorkerQueue } from '../utils/workers'
-import { setupMarkdownMode } from './markdown'
-import { setupCssMode } from './css'
-import { setupJavaScriptMode } from './javascript'
+import {
+  setupMarkdownMode,
+  setupCssMode,
+  setupJavaScriptMode,
+} from './markdown'
+// import { setupCssMode } from './css'
+// import { setupJavaScriptMode } from './javascript'
 import { getTheme } from '../utils/theme'
 import colors from 'tailwindcss/colors'
 import dlv from 'dlv'
