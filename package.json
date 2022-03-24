@@ -62,17 +62,18 @@
     "remark-frontmatter": "^4.0.1",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "remark-toc": "^8.0.1",
     "simple-functional-loader": "^1.2.1",
     "string-replace-loader": "^2.3.0",
     "tailwindcss": "^3.0.23",
     "tailwindcss-language-service": "0.0.23",
     "tailwindcss-v1": "npm:tailwindcss@1.9.6",
     "tailwindcss-v2": "npm:tailwindcss@2.2.19",
-    "vscode-languageserver-textdocument": "^1.0.1",
     "vfile": "5.3.0",
     "vfile-message": "3.1.0",
     "vfile-reporter": "7.0.3",
     "vfile-statistics": "2.0.0",
+    "vscode-languageserver-textdocument": "^1.0.1",
     "worker-loader": "^3.0.8"
   }
 }

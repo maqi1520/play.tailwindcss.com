@@ -5,6 +5,7 @@ import { MDXProvider, useMDXComponents } from '@mdx-js/react'
 import remarkGfm from 'remark-gfm'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMath from 'remark-math'
+import remarkToc from 'remark-toc'
 import ReactDOMServer from 'react-dom/server'
 import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import Worker from 'worker-loader!../workers/postcss.worker.js'
@@ -27,6 +28,7 @@ import { MDXComponents } from './MDX/MDXComponents'
 import { VFile } from 'vfile'
 import { VFileMessage } from 'vfile-message'
 import { statistics } from 'vfile-statistics'
+import rehypeDivToSection from './utils/rehype-div'
 
 const HEADER_HEIGHT = 60 - 1
 const TAB_BAR_HEIGHT = 40
@@ -133,7 +135,7 @@ export default function Pen({
     const file = new VFile({ basename: 'index.mdx', value: content.html })
     let stats, errorMessage
 
-    // const capture = (name) => () => (tree) => {
+    // const capture = (name) => (opt) => (tree) => {
     //   file.data[name] = tree;
     // };
 
@@ -142,6 +144,12 @@ export default function Pen({
     remarkPlugins.push(remarkGfm)
     remarkPlugins.push(remarkFrontmatter)
     remarkPlugins.push(remarkMath)
+    remarkPlugins.push(() =>
+      remarkToc({
+        heading: '目录',
+        maxDepth: 2,
+      })
+    )
 
     //remarkPlugins.push(capture('mdast'))
 
@@ -151,7 +159,7 @@ export default function Pen({
         format: 'mdx',
         useDynamicImport: true,
         remarkPlugins,
-        //rehypePlugins: [capture('hast')],
+        rehypePlugins: [rehypeDivToSection],
         //recmaPlugins: [capture('esast')],
         useMDXComponents,
       })
