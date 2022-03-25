@@ -42,8 +42,8 @@ export default function App({ Component, pageProps }) {
           color="#38bdf8"
         />
         <link rel="shortcut icon" href={v('/favicons/favicon.ico')} />
-        <meta name="apple-mobile-web-app-title" content="Tailwind Play" />
-        <meta name="application-name" content="Tailwind Play" />
+        <meta name="apple-mobile-web-app-title" content="MDX Editor" />
+        <meta name="application-name" content="MDX Editor" />
         <meta name="msapplication-TileColor" content="#38bdf8" />
         <meta
           name="msapplication-config"
