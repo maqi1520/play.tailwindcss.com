@@ -7,8 +7,7 @@ export async function getDefaultContent() {
   const html = `## heading
 ### 2323
 `
-  const css = `/* --- code --- */
-.code__card {
+  const css = `.code__card {
   background-color: #1E1E1E;
   border-radius: 5px;
   z-index: 1;
@@ -333,7 +332,40 @@ sup {
   line-height: 35px;
   z-index: 20;
 }
-  `
+#nice .footnote-ref {
+  color: #1e6bb8;
+  font-size: 75%;
+  position: relative;
+  top: -4px;
+  left: 2px;
+  font-weight: bold;
+}
+
+#nice .footnote-item {
+  display: flex;
+  font-size: 14px;
+}
+
+#nice .footnote-num {
+  display: inline;
+  width: 10%; /*神奇，50px就不可以*/
+  background: none;
+  font-size: 80%;
+  opacity: 0.6;
+  line-height: 26px;
+  font-family: ptima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+#nice .footnote-item .footnote-content {
+  display: inline;
+  font-size: 14px;
+  width: 90%;
+  padding: 0px;
+  margin: 0;
+  line-height: 26px;
+  color: black;
+  word-break:break-all;
+}`
   const config = `module.exports = {
   theme: {
     extend: {

@@ -35,20 +35,17 @@ export function put(item) {
 
 export function get(Key) {
   return new Promise((resolve, reject) => {
-    fetch(process.env.TW_API_URL + '/api/playgrounds/' + Key.ID, {
+    fetch(process.env.NEXT_PUBLIC_API_URL + '/api/share?id=' + Key.ID, {
       headers: {
         Accept: 'application/json',
       },
     })
       .then((response) => {
-        if (!response.ok) {
-          throw response
-        }
         return response.json()
       })
       .then((data) => {
         resolve({
-          Item: { ...data, ID: data.uuid },
+          Item: { ...data, ID: data._id },
         })
       })
       .catch((err) => {

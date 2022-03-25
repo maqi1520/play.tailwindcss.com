@@ -11,7 +11,6 @@ export function Share({
   activeTab,
   onShareStart,
   onShareComplete,
-  tailwindVersion,
 }) {
   const [{ state, path, errorText }, setState] = useState({
     state: 'disabled',
@@ -32,7 +31,7 @@ export function Share({
     if (state === 'loading') {
       if (onShareStart) onShareStart()
       window
-        .fetch('/api/share', {
+        .fetch(process.env.NEXT_PUBLIC_API_URL + '/api/share', {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
@@ -41,7 +40,6 @@ export function Share({
             html: editorRef.current.getValue('html'),
             css: editorRef.current.getValue('css'),
             config: editorRef.current.getValue('config'),
-            version: tailwindVersion,
           }),
         })
         .then((res) => {
@@ -51,7 +49,7 @@ export function Share({
         .then((res) => res.json())
         .then((res) => {
           if (current) {
-            const newPath = `/${res.ID}${getLayoutQueryString({
+            const newPath = `/${res.id}${getLayoutQueryString({
               layout,
               responsiveSize,
               file: activeTab,
@@ -116,7 +114,7 @@ export function Share({
     return () => {
       current = false
     }
-  }, [state, path, editorRef, onShareStart, onShareComplete, tailwindVersion])
+  }, [state, path, editorRef, onShareStart, onShareComplete])
 
   useEffect(() => {
     if (dirty) {
@@ -160,7 +158,7 @@ export function Share({
             state === 'copied' || state === 'loading' ? 'true' : 'false'
           }
         >
-          Share
+          分享
         </span>
         <span
           className={clsx('absolute inset-0 flex items-center justify-center', {

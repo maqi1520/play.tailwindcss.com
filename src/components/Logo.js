@@ -16,7 +16,7 @@ export function Logo({ className }) {
         ></path>
       </svg>
 
-      <span className="text-2xl ml-1">Wechat</span>
+      <span className="text-2xl ml-1">MDX</span>
       <span className="text-2xl ml-1">Editor</span>
     </div>
   )

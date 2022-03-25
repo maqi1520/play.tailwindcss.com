@@ -29,6 +29,7 @@ import { VFile } from 'vfile'
 import { VFileMessage } from 'vfile-message'
 import { statistics } from 'vfile-statistics'
 import rehypeDivToSection from './utils/rehype-div'
+import reHypeLinkFoot from './utils/rehype-link-foot'
 
 const HEADER_HEIGHT = 60 - 1
 const TAB_BAR_HEIGHT = 40
@@ -144,6 +145,7 @@ export default function Pen({
     remarkPlugins.push(remarkGfm)
     remarkPlugins.push(remarkFrontmatter)
     remarkPlugins.push(remarkMath)
+    //remarkPlugins.push(remarkLinkFoot)
     remarkPlugins.push(() =>
       remarkToc({
         heading: '目录',
@@ -159,7 +161,7 @@ export default function Pen({
         format: 'mdx',
         useDynamicImport: true,
         remarkPlugins,
-        rehypePlugins: [rehypeDivToSection],
+        rehypePlugins: [rehypeDivToSection, reHypeLinkFoot],
         //recmaPlugins: [capture('esast')],
         useMDXComponents,
       })
