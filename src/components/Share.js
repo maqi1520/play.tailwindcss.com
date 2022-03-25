@@ -203,7 +203,7 @@ export function Share({
         <button
           type="button"
           className="flex-auto min-w-0 flex items-center space-x-2 text-sm leading-6 font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-          title={`https://play.tailwindcss.com${path}`}
+          title={`${window.location.origin}${path}`}
           onClick={() => {
             navigator.clipboard
               .writeText(window.location.origin + path)

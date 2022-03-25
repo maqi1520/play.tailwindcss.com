@@ -32,7 +32,7 @@ export default function App({ errorCode, ...props }) {
       <Head>
         <meta
           property="og:url"
-          content={`https://play.tailwindcss.com${
+          content={`https://editor.runjs.cool${
             initialContent.ID ? `/${initialContent.ID}` : ''
           }`}
         />
@@ -44,14 +44,14 @@ export default function App({ errorCode, ...props }) {
           name="twitter:image"
           content={
             initialContent.ID
-              ? 'https://play.tailwindcss.com/social-square.jpg'
-              : 'https://play.tailwindcss.com/social-card.jpg'
+              ? 'https://editor.runjs.cool/social-square.jpg'
+              : 'https://editor.runjs.cool/social-card.jpg'
           }
         />
         {!initialContent.ID && (
           <meta
             property="og:image"
-            content="https://play.tailwindcss.com/social-card.jpg"
+            content="https://editor.runjs.cool/social-card.jpg"
           />
         )}
       </Head>
