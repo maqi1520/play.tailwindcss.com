@@ -1,12 +1,12 @@
 import prettier from 'prettier/standalone'
 
 const options = {
-  html: async () => ({
-    parser: 'html',
-    plugins: [await import('prettier/parser-html')],
+  markdown: async () => ({
+    parser: 'markdown',
+    plugins: [await import('prettier/parser-markdown')],
     printWidth: 10000,
   }),
-  tailwindcss: async () => ({
+  css: async () => ({
     parser: 'css',
     plugins: [await import('prettier/parser-postcss')],
     printWidth: 100,

@@ -341,7 +341,13 @@ function registerDocumentFormattingEditProviders() {
   }
   disposables.push(
     monaco.languages.registerDocumentFormattingEditProvider(
-      'tailwindcss',
+      'markdown',
+      formattingEditProvider
+    )
+  )
+  disposables.push(
+    monaco.languages.registerDocumentFormattingEditProvider(
+      'css',
       formattingEditProvider
     )
   )
