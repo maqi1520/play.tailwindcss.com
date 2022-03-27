@@ -2,7 +2,7 @@
  * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
-import cn from 'classnames'
+//import cn from 'classnames'
 import React from 'react'
 
 const Heading = function Heading({
@@ -23,39 +23,9 @@ const Heading = function Heading({
 
 Heading.displayName = 'Heading'
 
-export const H1 = ({ className, ...props }) => (
-  <Heading
-    as="h1"
-    className={cn(className, 'text-5xl font-bold leading-tight')}
-    {...props}
-  />
-)
+export const H1 = ({ className, ...props }) => <Heading as="h1" {...props} />
 
-export const H2 = ({ className, ...props }) => (
-  <Heading
-    as="h2"
-    className={cn(
-      'text-3xl leading-10 text-primary dark:text-primary-dark font-bold my-6',
-      className
-    )}
-    {...props}
-  />
-)
-export const H3 = ({ className, ...props }) => (
-  <Heading
-    as="h3"
-    className={cn(
-      className,
-      'text-2xl leading-9 text-primary dark:text-primary-dark font-bold my-6'
-    )}
-    {...props}
-  />
-)
+export const H2 = ({ className, ...props }) => <Heading as="h2" {...props} />
+export const H3 = ({ className, ...props }) => <Heading as="h3" {...props} />
 
-export const H4 = ({ className, ...props }) => (
-  <Heading
-    as="h4"
-    className={cn(className, 'text-xl font-bold leading-9 my-4')}
-    {...props}
-  />
-)
+export const H4 = ({ className, ...props }) => <Heading as="h4" {...props} />

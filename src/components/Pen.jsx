@@ -1,20 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import * as runtime from 'react/jsx-runtime'
-import { evaluate } from '@mdx-js/mdx'
-import { MDXProvider, useMDXComponents } from '@mdx-js/react'
-import remarkGfm from 'remark-gfm'
-import remarkFrontmatter from 'remark-frontmatter'
-import remarkMath from 'remark-math'
-import remarkToc from 'remark-toc'
-import ReactDOMServer from 'react-dom/server'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect'
 import Worker from 'worker-loader!../workers/postcss.worker.js'
 import { debounce } from 'debounce'
 import { Editor } from './Editor'
 import SplitPane from 'react-split-pane'
 import useMedia from 'react-use/lib/useMedia'
-import { validateJavaScript } from '../utils/validateJavaScript'
-
 import { useDebouncedState } from '../hooks/useDebouncedState'
 import { Preview } from './Preview'
 import { ErrorOverlay } from './ErrorOverlay'
@@ -23,13 +13,22 @@ import { Header } from './Header'
 import { Share } from './Share'
 import { CopyBtn } from './Copy'
 import { TabBar } from './TabBar'
-import { MDXComponents } from './MDX/MDXComponents'
 
+import * as runtime from 'react/jsx-runtime'
+import * as Babel from '@babel/standalone'
+import { evaluate } from '@mdx-js/mdx'
+import { MDXProvider, useMDXComponents } from '@mdx-js/react'
+import remarkGfm from 'remark-gfm'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkMath from 'remark-math'
+import remarkToc from 'remark-toc'
+import ReactDOMServer from 'react-dom/server'
+import { validateReactComponent } from '../utils/validateJavaScript'
+import { MDXComponents } from '../components/MDX/MDXComponents'
 import { VFile } from 'vfile'
 import { VFileMessage } from 'vfile-message'
-import { statistics } from 'vfile-statistics'
-import rehypeDivToSection from './utils/rehype-div'
-import reHypeLinkFoot from './utils/rehype-link-foot'
+import rehypeDivToSection from '../components/utils/rehype-div'
+import reHypeLinkFoot from '../components/utils/rehype-link-foot'
 
 const HEADER_HEIGHT = 60 - 1
 const TAB_BAR_HEIGHT = 40
@@ -69,8 +68,6 @@ export default function Pen({
   const [responsiveSize, setResponsiveSize] = useState(
     initialResponsiveSize || DEFAULT_RESPONSIVE_SIZE
   )
-
-  const [state, setState] = useState({ file: null })
 
   useEffect(() => {
     setDirty(true)
@@ -122,19 +119,37 @@ export default function Pen({
   }, [])
 
   async function compileNow(content) {
-    if (content.config) {
-      let validateResult = await validateJavaScript(content.config)
-      if (!validateResult.isValid) {
-        return setError({ ...validateResult.error, file: 'Config' })
-      }
-    }
     cancelSetError()
     setIsLoading(true)
-
     localStorage.setItem('content', JSON.stringify(content))
+    let RootComponents = {}
+
+    if (content.config) {
+      try {
+        //jsx 先通过编译成js
+        let res = Babel.transform(content.config, { presets: ['react'] })
+        let code = res.code.replace('export default ', 'return ')
+
+        // eslint-disable-next-line no-new-func
+        RootComponents = Function('React', code)(React)
+        if (!validateReactComponent(RootComponents)) {
+          return setError({
+            error: {
+              message: 'not react component',
+              file: 'Config',
+            },
+          })
+        }
+      } catch (error) {
+        setError({
+          message: error,
+          file: 'Config',
+        })
+      }
+      setError()
+    }
 
     const file = new VFile({ basename: 'index.mdx', value: content.html })
-    let stats, errorMessage
 
     // const capture = (name) => (opt) => (tree) => {
     //   file.data[name] = tree;
@@ -166,11 +181,10 @@ export default function Pen({
         useMDXComponents,
       })
       content.html = ReactDOMServer.renderToString(
-        <MDXProvider components={MDXComponents}>
+        <MDXProvider components={{ ...MDXComponents, ...RootComponents }}>
           <Content />
         </MDXProvider>
       )
-
       const { css, html } = content
 
       if (css || html) {
@@ -185,16 +199,13 @@ export default function Pen({
         file.message(message)
       }
 
-      stats = state.file ? statistics(state.file) : {}
-
-      console.log(file.messages[0].message)
-      errorMessage = file.messages[0].message
+      let errorMessage = file.messages[0].message
+      setError({
+        message: errorMessage,
+        file: 'MDX',
+      })
     }
-    setState({
-      stats,
-      file,
-      errorMessage,
-    })
+
     setIsLoadingImmediate(false)
   }
 
@@ -330,17 +341,6 @@ export default function Pen({
     setActiveTab(initialActiveTab)
   }, [initialActiveTab])
 
-  const errorMessage = state.errorMessage && (
-    <span className="group relative ml-auto">
-      <span className="w-6 h-6 flex justify-center items-center bg-red-600 text-white rounded-full">
-        {state.stats.fatal || state.stats.warn || 0}
-      </span>
-      <div className="hidden group-hover:block absolute top-full right-0 bg-white shadow-sm border-gray-200 border p-4 rounded text-red-500">
-        <pre>{state.errorMessage}</pre>
-      </div>
-    </span>
-  )
-
   return (
     <>
       <Header
@@ -368,7 +368,6 @@ export default function Pen({
           <>
             {(!isLg || size.layout !== 'preview') && (
               <TabBar
-                errorMessage={errorMessage}
                 width={
                   size.layout === 'vertical' && isLg ? size.current : '100%'
                 }

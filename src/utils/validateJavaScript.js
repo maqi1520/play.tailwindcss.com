@@ -1,3 +1,24 @@
+function isClassComponent(component) {
+  return (
+    typeof component === 'function' && !!component.prototype.isReactComponent
+  )
+}
+
+function isFunctionComponent(component) {
+  return (
+    typeof component === 'function' &&
+    String(component).includes('React.createElement')
+  )
+}
+
+function isReactComponent(component) {
+  return isClassComponent(component) || isFunctionComponent(component)
+}
+
+export function validateReactComponent(values) {
+  return Object.values(values).every((value) => isReactComponent(value))
+}
+
 export function validateJavaScript(script) {
   return new Promise((resolve) => {
     const stringToEval = `throw new Error('Parsing successful!');function _hmm(){\n${script}\n}`

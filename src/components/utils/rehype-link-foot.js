@@ -7,7 +7,6 @@ export default function remarkLinkFoot(options) {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'a' && node.properties.title) {
         index++
-        console.log(node)
         node.children.push({
           type: 'element',
           tagName: 'span',

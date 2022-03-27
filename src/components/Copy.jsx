@@ -61,7 +61,9 @@ export const CopyBtn = forwardRef(function (props, ref) {
   const handleClick = () => {
     setState({ state: 'loading' })
     const inlineHtml = inlineCSS(html, css)
-    copySafari(inlineHtml)
+    copySafari(
+      inlineHtml.replace(/<div/g, '<section').replace(/<\/div>/g, '</section>')
+    )
 
     setState({ state: 'copied' })
     setTimeout(() => {

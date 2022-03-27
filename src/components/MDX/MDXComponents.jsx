@@ -32,17 +32,16 @@ const Blockquote = ({ children, ...props }) => {
 }
 
 export const MDXComponents = {
-  wrapper: (props) => <section id="nice" {...props} />,
+  wrapper: (props) => <section className="markdown-body" {...props} />,
   h1: H1,
   h2: H2,
   h3: H3,
   h4: H4,
   a: (props) => {
-    return (
-      <span className="link">
-        <a {...props} />
-      </span>
-    )
+    if (props.href && props.href.indexOf('https://mp.weixin.qq.com')) {
+      return <a {...props} />
+    }
+    return <span className="link">{props.children}</span>
   },
   pre: CodeBlock,
   img: (props) => {

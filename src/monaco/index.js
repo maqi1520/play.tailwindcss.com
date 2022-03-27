@@ -302,6 +302,14 @@ function setupKeybindings(editor) {
     handler,
     when
   )
+
+  // var myBinding = editor.addCommand(
+  //   monaco.KeyCode.F9,
+  //   function () {
+  //     alert('F9 pressed!')
+  //   },
+  //   true
+  // )
 }
 
 function registerDocumentFormattingEditProviders() {

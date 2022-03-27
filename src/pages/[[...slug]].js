@@ -6,10 +6,11 @@ import { get } from '../utils/database'
 import { getDefaultContent } from '../utils/getDefaultContent'
 import Head from 'next/head'
 
-import dynamic from 'next/dynamic'
-const Pen = dynamic(() => import('../components/Pen'), {
-  ssr: false,
-})
+import Pen from '../components/Pen'
+//import dynamic from 'next/dynamic'
+// const Pen = dynamic(() => import('../components/Pen'), {
+//   ssr: false,
+// })
 
 export default function App({ errorCode, ...props }) {
   const [initialContent, setContent] = useState(props.initialContent)
