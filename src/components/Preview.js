@@ -352,12 +352,31 @@ export const Preview = forwardRef(
                       padding: 0;
                     }
                     </style>
+                    <style type="text/css" media="print">
+                    @page {
+                      size: A4;
+                      margin:8mm 12mm;
+                    }
+                    p,.code__card {
+                      page-break-inside: avoid;
+                    }
+                    html, body {
+                      width: 210mm;
+                      height: 297mm;
+                    }
+                    body {-webkit-print-color-adjust: exact;}
+                    </style>
                     <style id="_style"></style>
                     <script>
                     var hasHtml = false
                     var hasCss = false
                     var visible = false
                     window.addEventListener('message', (e) => {
+                      if (typeof e.data.print  !== 'undefined') {
+                        document.title=e.data.title;
+                        window.print();
+                        return
+                      }
                       if (typeof e.data.clear !== 'undefined') {
                         setHtml()
                         setCss()

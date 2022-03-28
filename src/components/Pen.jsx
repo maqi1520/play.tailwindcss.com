@@ -361,7 +361,7 @@ export default function Pen({
           responsiveSize={responsiveDesignMode ? responsiveSize : undefined}
           activeTab={activeTab}
         />
-        <CopyBtn ref={copyRef} />
+        <CopyBtn editorRef={editorRef} previewRef={previewRef} ref={copyRef} />
       </Header>
       <main className="flex-auto relative border-t border-gray-200 dark:border-gray-800">
         {initialContent && typeof size.current !== 'undefined' ? (

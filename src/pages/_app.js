@@ -1,7 +1,7 @@
 import '../css/main.css'
 import Head from 'next/head'
 
-const TITLE = '微信 MDX 排版编辑器'
+const TITLE = ' MDX Editor | 一个好用的排版编辑器'
 const DESCRIPTION =
   '一个微信排版编辑器，使用 MDX 来排版，可以在线写样式，写组件，一个专属于前端的排版编辑器'
 const FAVICON_VERSION = 3

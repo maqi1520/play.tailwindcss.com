@@ -3,7 +3,7 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/vsDark'
 
 function CodeBlock(props) {
-  const { children, className = 'language-js' } = props.children.props
+  const { children = '', className = 'language-js' } = props.children.props
   // e.g. "language-js"
 
   const language = className.substring(9)

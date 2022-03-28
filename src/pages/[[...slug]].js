@@ -45,7 +45,7 @@ export default function App({ errorCode, ...props }) {
           name="twitter:image"
           content={
             initialContent.ID
-              ? 'https://editor.runjs.cool/social-square.jpg'
+              ? 'https://editor.runjs.cool/social-square.png'
               : 'https://editor.runjs.cool/social-card.jpg'
           }
         />
