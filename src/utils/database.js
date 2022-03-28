@@ -1,3 +1,5 @@
+import fetch from 'node-fetch'
+
 export function put(item) {
   return new Promise((resolve, reject) => {
     fetch(process.env.TW_API_URL + '/api/playgrounds/', {
