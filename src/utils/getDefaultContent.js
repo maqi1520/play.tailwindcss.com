@@ -2,11 +2,10 @@ import postcss from 'postcss'
 import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
+import defaultContent from 'raw-loader!./index.md'
 
 export async function getDefaultContent() {
-  const html = `## heading
-### 2323
-`
+  const html = defaultContent
   const css = `/* --- code --- */
 .code__card {
   background-color: #1e293b;

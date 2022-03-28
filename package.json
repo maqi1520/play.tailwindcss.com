@@ -3,8 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:plugins": "if [ -f './.next/serverless/scripts/buildBuiltinPlugins.js' ]; then node ./.next/serverless/scripts/buildBuiltinPlugins.js; else node ./.next/server/scripts/buildBuiltinPlugins.js; fi",
-    "build": "next build && npm run build:plugins",
+    "build": "next build",
     "start": "next start"
   },
   "dependencies": {
