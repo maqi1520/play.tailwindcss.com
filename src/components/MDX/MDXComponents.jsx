@@ -38,7 +38,7 @@ export const MDXComponents = {
   h3: H3,
   h4: H4,
   a: (props) => {
-    if (props.href && props.href.indexOf('https://mp.weixin.qq.com')) {
+    if (props.href && props.href.indexOf('https://mp.weixin.qq.com') > -1) {
       return <a {...props} />
     }
     return <span className="link">{props.children}</span>
